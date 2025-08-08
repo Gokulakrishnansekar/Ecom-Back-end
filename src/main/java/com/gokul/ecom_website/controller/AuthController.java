@@ -50,6 +50,11 @@ public class AuthController {
 
     }
 
+    @GetMapping("dummy")
+    public String working(){
+        return "it is working fine as expected";
+    }
+
 
 
     @PostMapping("change-password")
