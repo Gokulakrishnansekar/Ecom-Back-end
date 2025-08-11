@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/")
@@ -52,7 +54,8 @@ public class AuthController {
 
     @GetMapping("dummy")
     public String working(){
-        return "it is working fine as expected";
+        List<UsersModel>user =loginService.getUsers();
+        return "it is working fine as expected"+ user.toString();
     }
 
 
