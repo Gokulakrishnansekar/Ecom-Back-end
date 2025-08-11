@@ -47,9 +47,6 @@ public class LoginService {
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
 
     public ResponseEntity<AuthResponse> verify(UsersModel user) {
-
-        user.setPassword(encoder.encode("admin"));
-        userDetailsRepo.save(user);
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),user.getPassword()
         ));
