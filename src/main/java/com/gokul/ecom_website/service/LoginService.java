@@ -74,7 +74,7 @@ public class LoginService {
         {
            user=new UsersModel();
             user.setMail(userName);
-            user.setMail(userName);
+            user.setUsername(userName);
             userDetailsRepo.save(user);
         }
 
