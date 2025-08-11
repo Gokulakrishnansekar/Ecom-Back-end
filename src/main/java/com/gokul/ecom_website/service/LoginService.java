@@ -48,7 +48,8 @@ public class LoginService {
 
     public ResponseEntity<AuthResponse> verify(UsersModel user) {
 
-
+        user.setPassword(encoder.encode("admin"));
+        userDetailsRepo.save(user);
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),user.getPassword()
         ));
@@ -72,6 +73,13 @@ public class LoginService {
         {
         String userName = jwtUtils.verifyGoogleToken(token);
         UsersModel user=userDetailsRepo.findByusername(userName);
+        if(user==null)
+        {
+           user=new UsersModel();
+            user.setMail(userName);
+            user.setMail(userName);
+            userDetailsRepo.save(user);
+        }
 
             AuthResponse response= new AuthResponse(jwtUtils.generateToken(user));
             log.warn(response.getToken());

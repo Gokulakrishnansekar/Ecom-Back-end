@@ -3,6 +3,7 @@ package com.gokul.ecom_website.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name = "product")
 public class Product {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,10 +35,6 @@ public class Product {
 
     public void setImageData(byte[] imageData) {
         this.imageData = imageData;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getImageName() {
@@ -138,8 +136,7 @@ public class Product {
     @Column
     private String imageType;
 
-    @Column
-    @Lob
+    @Column(name = "image_data",columnDefinition = "BYTEA")
     private byte[] imageData;
 
 }
