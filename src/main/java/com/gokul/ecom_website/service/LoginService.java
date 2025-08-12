@@ -6,6 +6,7 @@ import com.gokul.ecom_website.model.MyUserPrinciple;
 import com.gokul.ecom_website.model.PasswordModel;
 import com.gokul.ecom_website.model.ResetPasswordModel;
 import com.gokul.ecom_website.Entity.UsersModel;
+import com.gokul.ecom_website.repository.RolesRepo;
 import com.gokul.ecom_website.repository.UserDetailsRepo;
 import com.gokul.ecom_website.repository.UserRolesRepo;
 import com.gokul.ecom_website.utils.JwtUtils;
@@ -20,7 +21,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +41,13 @@ public class LoginService {
     private UserRolesRepo userRolesRepo;
 
     @Autowired
+    private RolesRepo rolesRepo;
+    @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
     private EmailService emailService;
+
 
 
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
@@ -73,8 +79,9 @@ public class LoginService {
         if(user==null)
         {
            user=new UsersModel();
-            user.setMail(userName);
             user.setUsername(userName);
+            List<RolesEntity> roles=rolesRepo.findAllById(Arrays.asList(2,3));
+            user.setRoles(roles);
             userDetailsRepo.save(user);
         }
 
