@@ -1,6 +1,7 @@
 package com.gokul.ecom_website.controller;
 
 import com.gokul.ecom_website.model.AuthResponse;
+import com.gokul.ecom_website.model.MyUserPrinciple;
 import com.gokul.ecom_website.model.Product;
 import com.gokul.ecom_website.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.MethodNotAllowedException;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "*")//allow origins for actual request
@@ -46,8 +52,12 @@ public class ProductController {
     }
     @PutMapping("/product")
     public ResponseEntity<?> updateProduct(@RequestPart Product product,
-                              @RequestPart MultipartFile image) {
+                                           @RequestPart MultipartFile image, @AuthenticationPrincipal MyUserPrinciple principle) {
         try{
+            if(!Objects.equals(product.getCreatedBy().getId(), principle.getUser().getId()))
+            {
+               throw new AccessDeniedException("product can be only deleted by creator");
+            }
             if(product.getId()==null || product.getName().isEmpty()){
                 return new ResponseEntity<>(new AuthResponse("Product name is mandatory"),HttpStatus.OK);
             }

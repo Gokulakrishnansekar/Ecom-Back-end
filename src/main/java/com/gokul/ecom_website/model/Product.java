@@ -1,5 +1,6 @@
 package com.gokul.ecom_website.model;
 
+import com.gokul.ecom_website.Entity.UsersModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -123,6 +124,15 @@ public class Product {
     private BigDecimal price;
     @Column
     private String category;
+
+    public UsersModel getCreatedBy() {
+        return CreatedBy;
+    }
+
+    public void setCreatedBy(UsersModel createdBy) {
+        CreatedBy = createdBy;
+    }
+
     @Column
     private LocalDate release_date;
     @Column
@@ -138,6 +148,14 @@ public class Product {
 
     @Column(name = "image_data",columnDefinition = "BYTEA")
     private byte[] imageData;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "created_by",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "product_pkey")
+    )
+    private UsersModel CreatedBy;
 
 }
 

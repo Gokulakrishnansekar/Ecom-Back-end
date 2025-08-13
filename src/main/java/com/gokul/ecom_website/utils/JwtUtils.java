@@ -16,9 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -39,6 +37,8 @@ public class JwtUtils {
     public String generateToken(UsersModel user) {
         long expiration = 1000 * 60*60*15 ;
         log.info("generate token");
+
+
         log.info(user.toString());
             if(user.getRoles() !=null)
         {
@@ -46,7 +46,10 @@ public class JwtUtils {
         }
 
         List<String> userRoles=user.getRoles().stream().map(RolesEntity::getRole_name).toList();
-        return  Jwts.builder().subject(user.getUsername()).claim("roles",userRoles)
+        Map<String,Object> claims=new HashMap<>();
+        claims.put("user_id",user.getId());
+        claims.put("roles",userRoles);
+        return  Jwts.builder().subject(user.getUsername()).claims(claims)
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis()+ expiration)).signWith(key)
         .signWith(key, SignatureAlgorithm.HS256)
@@ -64,6 +67,13 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public Integer extractId(String token){
+        return (Integer) Jwts.parser() .setSigningKey((SecretKey) key)
+                .build()
+                .parseClaimsJws(token).getBody().get("id");
+
     }
 
     public Boolean validateToken(String token){

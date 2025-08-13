@@ -21,18 +21,11 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-
         UsersModel user= userDetailsRepo.findByusername(username);
-
        if(user==null)
         {
-
             throw new UsernameNotFoundException("User name not in the database");
         }
-
         return new MyUserPrinciple(user);
     }
-
-
 }

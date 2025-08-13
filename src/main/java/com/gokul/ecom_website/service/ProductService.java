@@ -1,11 +1,15 @@
 package com.gokul.ecom_website.service;
 
 
+import com.gokul.ecom_website.Entity.UsersModel;
 import com.gokul.ecom_website.controller.ProductController;
+import com.gokul.ecom_website.model.MyUserPrinciple;
 import com.gokul.ecom_website.model.Product;
 import com.gokul.ecom_website.repository.ProductInterface;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +38,14 @@ public class ProductService {
     }
 
     public Product addProduct(Product product, MultipartFile image) throws IOException{
+       Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+
+        MyUserPrinciple userDetails=(MyUserPrinciple) authentication.getPrincipal();
+        Integer currentUserId=userDetails.getUser().getId();
+        UsersModel user=new UsersModel();
+        user.setId(currentUserId);
+        product.setCreatedBy(user);
+
        product.setImageName(image.getOriginalFilename());
        product.setImageType(image.getContentType());
        product.setImageData(image.getBytes());
