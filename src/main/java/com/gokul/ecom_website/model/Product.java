@@ -153,7 +153,7 @@ public class Product {
     @JoinColumn(
             name = "created_by",
             nullable = false,
-            foreignKey = @ForeignKey(name = "product_pkey")
+            foreignKey = @ForeignKey(name = "fk_product_created_by")
     )
     private UsersModel CreatedBy;
 

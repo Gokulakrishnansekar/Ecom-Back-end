@@ -35,7 +35,7 @@ public class Config {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(c->c.disable());
-        http.authorizeHttpRequests(r->r.requestMatchers("/h2-console/**","/login/**").permitAll()
+        http.authorizeHttpRequests(r->r.requestMatchers("/h2-console/**","/login/**","/dummy").permitAll()
                 .anyRequest().authenticated());
 
                http.headers(h->h.frameOptions(f->f.disable()));
